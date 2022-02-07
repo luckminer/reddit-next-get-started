@@ -4,7 +4,7 @@ import { Box, Button } from "@chakra-ui/react";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
 import { useRegisterMutation } from "../generated/graphql";
-import { toErrorMap } from "../../utils/toErrorMap";
+import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 
 interface registerProps {}

@@ -1,11 +1,17 @@
-import { Box } from "@chakra-ui/react";
 import { NavBar } from "../components/NavBar";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
+import { usePostsQuery } from "../generated/graphql";
 
-const Index = () => (
-  <>
-    <NavBar />
-    <p>Hello World</p>
-  </>
-);
+const Index = () => {
+  const [{ data }] = usePostsQuery();
+  return (
+    <>
+      <NavBar />
+      <p>Hello World</p>
+      {!data ? null : data.posts.map((p) => <div key={p.id}>{p.title}</div>)}
+    </>
+  );
+};
 
-export default Index;
+export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
