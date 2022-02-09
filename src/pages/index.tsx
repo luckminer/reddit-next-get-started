@@ -27,8 +27,6 @@ const Index = () => {
     return <div>query failed for some reason</div>;
   }
 
-  console.log("variables:", variables);
-
   return (
     <Layout>
       <Flex align="center">
@@ -42,7 +40,7 @@ const Index = () => {
         <div>Loading...</div>
       ) : (
         <Stack spacing={8}>
-          {data!.posts.map((p) => (
+          {data!.posts.posts.map((p) => (
             <Box key={p.id} p={5} shadow="md" borderWidth="1px">
               <Heading fontSize="xl">{p.title}</Heading>
               <Text mt={4}>{p.textSnippet}</Text>
@@ -50,7 +48,7 @@ const Index = () => {
           ))}
         </Stack>
       )}
-      {data ? (
+      {data && data.posts.hasMore ? (
         <Flex>
           <Button
             mx="auto"
@@ -59,14 +57,16 @@ const Index = () => {
             onClick={() =>
               setVariables({
                 limit: variables.limit,
-                cursor: data.posts[data.posts.length - 1].id,
+                cursor: data.posts.posts[data.posts.posts.length - 1].id,
               })
             }
           >
             Load more
           </Button>
         </Flex>
-      ) : null}
+      ) : (
+        <Box my={8} />
+      )}
     </Layout>
   );
 };
