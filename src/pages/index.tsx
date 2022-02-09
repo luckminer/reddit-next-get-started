@@ -2,22 +2,71 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { usePostsQuery } from "../generated/graphql";
 import Layout from "../components/Layout";
-import { Link } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useState } from "react";
 
 const Index = () => {
-  const [{ data }] = usePostsQuery();
+  const [variables, setVariables] = useState({
+    limit: 10,
+    cursor: null as number | null,
+  });
+  const [{ data, fetching }] = usePostsQuery({
+    variables,
+  });
+
+  if (!fetching && !data) {
+    return <div>query failed for some reason</div>;
+  }
+
+  console.log("variables:", variables);
+
   return (
     <Layout>
-      <NextLink href="/create-post">
-        <Link>crete post</Link>
-      </NextLink>
+      <Flex align="center">
+        <Heading>Posts</Heading>
+        <NextLink href="/create-post">
+          <Link ml="auto">crete post</Link>
+        </NextLink>
+      </Flex>
       <br />
-      {!data ? (
+      {!data && fetching ? (
         <div>Loading...</div>
       ) : (
-        data.posts.map((p) => <div key={p.id}>{p.title}</div>)
+        <Stack spacing={8}>
+          {data!.posts.map((p) => (
+            <Box key={p.id} p={5} shadow="md" borderWidth="1px">
+              <Heading fontSize="xl">{p.title}</Heading>
+              <Text mt={4}>{p.textSnippet}</Text>
+            </Box>
+          ))}
+        </Stack>
       )}
+      {data ? (
+        <Flex>
+          <Button
+            mx="auto"
+            my={8}
+            isLoading={fetching}
+            onClick={() =>
+              setVariables({
+                limit: variables.limit,
+                cursor: data.posts[data.posts.length - 1].id,
+              })
+            }
+          >
+            Load more
+          </Button>
+        </Flex>
+      ) : null}
     </Layout>
   );
 };
