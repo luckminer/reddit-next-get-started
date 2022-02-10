@@ -46,7 +46,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
       <Flex flex={1} m="auto" align="center" maxW={800}>
         <NextLink href="/">
           <Link>
-            <Heading>Reddit</Heading>
+            <Heading>Binov Poster</Heading>
           </Link>
         </NextLink>
         <Box m="auto">{body}</Box>

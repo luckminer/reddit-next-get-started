@@ -32,7 +32,7 @@ const Index = () => {
       <Flex align="center">
         <Heading>Posts</Heading>
         <NextLink href="/create-post">
-          <Link ml="auto">crete post</Link>
+          <Link ml="auto">create post</Link>
         </NextLink>
       </Flex>
       <br />
@@ -43,6 +43,7 @@ const Index = () => {
           {data!.posts.posts.map((p) => (
             <Box key={p.id} p={5} shadow="md" borderWidth="1px">
               <Heading fontSize="xl">{p.title}</Heading>
+              <Text> posted by {p.creator.username}</Text>
               <Text mt={4}>{p.textSnippet}</Text>
             </Box>
           ))}
