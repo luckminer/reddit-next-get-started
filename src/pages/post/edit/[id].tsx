@@ -7,6 +7,7 @@ import { useUpdatePostMutation } from "../../../generated/graphql";
 import { useGetIntId } from "../../../utils/useGetIntId";
 import { useGetPostFromUrl } from "../../../utils/useGetPostFromUrl";
 import { useRouter } from "next/router";
+import { withAppolo } from "../../../utils/withApollo";
 
 const EditPost = ({}) => {
   const id = useGetIntId();
@@ -67,4 +68,4 @@ const EditPost = ({}) => {
   );
 };
 
-export default EditPost;
+export default withAppolo({ ssr: false })(EditPost);

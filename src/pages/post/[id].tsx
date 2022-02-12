@@ -2,6 +2,7 @@ import { Box, Heading } from "@chakra-ui/react";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import Layout from "../../components/Layout";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
+import { withAppolo } from "../../utils/withApollo";
 
 export const Post = ({}) => {
   const { data, error, loading } = useGetPostFromUrl();
@@ -35,4 +36,4 @@ export const Post = ({}) => {
   );
 };
 
-export default Post;
+export default withAppolo({ ssr: false })(Post);

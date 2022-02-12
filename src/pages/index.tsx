@@ -1,4 +1,4 @@
-import { PostsQuery, usePostsQuery } from "../generated/graphql";
+import { usePostsQuery } from "../generated/graphql";
 import Layout from "../components/Layout";
 import {
   Box,
@@ -12,6 +12,7 @@ import {
 import NextLink from "next/link";
 import { UpdootSection } from "../components/UpdootSection";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
+import { withAppolo } from "../utils/withApollo";
 
 const Index = () => {
   const { data, loading, fetchMore, variables } = usePostsQuery({
@@ -68,24 +69,6 @@ const Index = () => {
                   limit: variables?.limit,
                   cursor: data.posts.posts[data.posts.posts.length - 1].id,
                 },
-                // updateQuery: (
-                //   previousValue,
-                //   { fetchMoreResult }
-                // ): PostsQuery => {
-                //   if (!fetchMoreResult) return previousValue as PostsQuery;
-
-                //   return {
-                //     __typename: "Query",
-                //     posts: {
-                //       __typename: "PaginatedPosts",
-                //       hasMore: (fetchMoreResult as PostsQuery).posts.hasMore,
-                //       posts: [
-                //         ...(previousValue as PostsQuery).posts.posts,
-                //         ...(fetchMoreResult as PostsQuery).posts.posts,
-                //       ],
-                //     },
-                //   };
-                // },
               })
             }
           >
@@ -99,4 +82,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withAppolo({ ssr: false })(Index);
