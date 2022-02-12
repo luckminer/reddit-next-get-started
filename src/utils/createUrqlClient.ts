@@ -81,8 +81,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
   if (isServer()) cookie = ctx?.req?.headers?.cookie;
 
-  console.log("GRAPHQL >>>", process.env.NEXT_PUBLIC_API_URL);
-
   return {
     url: process.env.NEXT_PUBLIC_API_URL as string,
     fetchOptions: () => {
