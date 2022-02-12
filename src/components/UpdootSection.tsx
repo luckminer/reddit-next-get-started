@@ -11,7 +11,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   const [loadingState, setLoadingState] = useState<
     "updoot-loading" | "downdoot-loading" | "not-loading"
   >("not-loading");
-  const [, vote] = useVoteMutation();
+  const [vote] = useVoteMutation();
 
   const { points, id: postId } = post;
 
@@ -26,7 +26,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
           if (post.voteStatus === 1) return;
 
           setLoadingState("updoot-loading");
-          await vote({ postId, value: 1 });
+          await vote({ variables: { postId, value: 1 } });
           setLoadingState("not-loading");
         }}
         isLoading={loadingState === "updoot-loading"}
@@ -42,7 +42,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
           if (post.voteStatus === -1) return;
 
           setLoadingState("downdoot-loading");
-          await vote({ postId, value: -1 });
+          await vote({ variables: { postId, value: -1 } });
           setLoadingState("not-loading");
         }}
         isLoading={loadingState === "downdoot-loading"}

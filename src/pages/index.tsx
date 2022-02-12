@@ -1,6 +1,4 @@
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import { usePostsQuery } from "../generated/graphql";
+import { PostsQuery, usePostsQuery } from "../generated/graphql";
 import Layout from "../components/Layout";
 import {
   Box,
@@ -12,27 +10,26 @@ import {
   Text,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useState } from "react";
 import { UpdootSection } from "../components/UpdootSection";
 import { EditDeletePostButtons } from "../components/EditDeletePostButtons";
 
 const Index = () => {
-  const [variables, setVariables] = useState({
-    limit: 10,
-    cursor: null as number | null,
-  });
-  const [{ data, fetching }] = usePostsQuery({
-    variables,
+  const { data, loading, fetchMore, variables } = usePostsQuery({
+    variables: {
+      limit: 10,
+      cursor: null,
+    },
+    notifyOnNetworkStatusChange: true,
   });
 
-  if (!fetching && !data) {
+  if (!loading && !data) {
     return <div>query failed for some reason</div>;
   }
 
   return (
     <Layout>
       <br />
-      {!data && fetching ? (
+      {!data && loading ? (
         <div>Loading...</div>
       ) : (
         <Stack spacing={8}>
@@ -64,11 +61,31 @@ const Index = () => {
           <Button
             mx="auto"
             my={8}
-            isLoading={fetching}
+            isLoading={loading}
             onClick={() =>
-              setVariables({
-                limit: variables.limit,
-                cursor: data.posts.posts[data.posts.posts.length - 1].id,
+              fetchMore({
+                variables: {
+                  limit: variables?.limit,
+                  cursor: data.posts.posts[data.posts.posts.length - 1].id,
+                },
+                // updateQuery: (
+                //   previousValue,
+                //   { fetchMoreResult }
+                // ): PostsQuery => {
+                //   if (!fetchMoreResult) return previousValue as PostsQuery;
+
+                //   return {
+                //     __typename: "Query",
+                //     posts: {
+                //       __typename: "PaginatedPosts",
+                //       hasMore: (fetchMoreResult as PostsQuery).posts.hasMore,
+                //       posts: [
+                //         ...(previousValue as PostsQuery).posts.posts,
+                //         ...(fetchMoreResult as PostsQuery).posts.posts,
+                //       ],
+                //     },
+                //   };
+                // },
               })
             }
           >
@@ -82,4 +99,4 @@ const Index = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Index);
+export default Index;
